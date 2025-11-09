@@ -1,0 +1,168 @@
+﻿@model SchoolManagement.Models.DashboardViewModel
+
+<div class="container mt-4">
+    <div class="row">
+        <!-- ================= LEFT COLUMN ================= -->
+        <div class="col-md-6">
+            <!-- Stats Section -->
+            
+                <div class="row mb-3">
+                    <!-- Students -->
+                    <div class="col-md-6">
+                        <div class="card text-white bg-success mb-3 shadow-sm">
+                            <div class="card-body text-center">
+                                <i class="fas fa-user-graduate fa-2x mb-2"></i>
+                                <h4 class="card-title">@Model.TotalStudents</h4>
+                                <p class="card-text">Our Total Students</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Parents -->
+                    <div class="col-md-6">
+                        <div class="card text-white bg-warning mb-3 shadow-sm">
+                            <div class="card-body text-center">
+                                <i class="fas fa-users fa-2x mb-2"></i>
+                                <h4 class="card-title">@Model.TotalParents</h4>
+                                <p class="card-text">Total Parents</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mb-3">
+                    <!-- Teachers -->
+                    <div class="col-md-6">
+                        <div class="card text-white bg-primary mb-3 shadow-sm">
+                            <div class="card-body text-center">
+                                <i class="fas fa-chalkboard-teacher fa-2x mb-2"></i>
+                                <h4 class="card-title">@Model.TotalTeachers</h4>
+                                <p class="card-text">Our Expert Teachers</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Earnings -->
+                    <div class="col-md-6">
+                        <div class="card text-white bg-info mb-3 shadow-sm">
+                            <div class="card-body text-center">
+                                <i class="fas fa-coins fa-2x mb-2"></i>
+                                <h4 class="card-title">@Model.TotalEarnings</h4>
+                                <p class="card-text">Yearly Total Earnings</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            <!-- Calendar -->
+            <div class="card mb-3">
+                <div class="card-header bg-secondary text-white">Event Calendar</div>
+                <div class="card-body">
+                    <div id="calendar"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= RIGHT COLUMN ================= -->
+        <div class="col-md-6">
+            <!-- Chart -->
+            <div class="card mb-4" style="height:400px">
+                <div class="card-header bg-secondary text-white">Fees Collection & Expenses</div>
+                <div class="card-body p-2" style="height:calc(100% - 50px);">
+                    <canvas id="feesChart" style="height:100%; width:100%;"></canvas>
+                </div>
+            </div>
+
+            <div class="row">
+                <!-- Notice Board -->
+                <div class="col-md-6">
+                    <div class="card mb-4 shadow-sm">
+                        <div class="card-header bg-secondary text-white">Notice Board</div>
+                        <div class="card-body" style="height:400px; overflow-y:auto;">
+                            @foreach (var notice in Model.Notices)
+                            {
+                                <div class="mb-2 border-bottom pb-2">
+                                    <small class="text-muted">@notice.NoticeDate.ToString("dd MMM, yyyy")</small>
+                                    <h6 class="fw-bold">@notice.Title</h6>
+                                    <p>@notice.Details</p>
+                                    <small class="text-muted">By @notice.PostedBy</small>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent Activities -->
+                <div class="col-md-6">
+                    <div class="card mb-4 shadow-sm">
+                        <div class="card-header bg-secondary text-white">Recent Activities</div>
+                        <div class="card-body" style="height:400px; overflow-y:auto;">
+                            @foreach (var act in Model.RecentActivities)
+                            {
+                                <div class="mb-2 border-bottom pb-2">
+                                    <small class="text-muted">@act.Date.ToString("dd MMM, yyyy HH:mm")</small><br />
+                                    @{
+                                        var words = act.Activity?.Split(' ') ?? new string[0];
+                                        var preview = words.Length > 100
+                                        ? string.Join(" ", words.Take(100)) + "..."
+                                        : act.Activity;
+                                    }
+                                    @preview
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- ================= Scripts ================= -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/main.min.css" rel="stylesheet">
+
+<script>
+    // FullCalendar
+    document.addEventListener('DOMContentLoaded', function() {
+        var calendarEl = document.getElementById('calendar');
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth'
+        });
+        calendar.render();
+    });
+
+    // Chart.js
+    document.addEventListener("DOMContentLoaded", function () {
+        const ctx = document.getElementById("feesChart").getContext("2d");
+
+        new Chart(ctx, {
+            type: "bar",
+            data: {
+                labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
+                datasets: [
+                    {
+                        label: "Fees Collection",
+                        data: [5000, 7000, 6000, 8000, 7500, 9000],
+                        backgroundColor: "rgba(75, 192, 192, 0.7)"
+                    },
+                    {
+                        label: "Expenses",
+                        data: [3000, 4000, 3500, 5000, 4200, 4800],
+                        backgroundColor: "rgba(255, 99, 132, 0.7)"
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: "top" },
+                    title: { display: true, text: "Default Fees Collection vs Expenses" }
+                }
+            }
+        });
+    });
+</script>

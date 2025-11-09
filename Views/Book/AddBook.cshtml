@@ -1,0 +1,51 @@
+﻿@model SchoolManagement.Models.BookModel
+<div class="container-fluid p-5 border-secondary">
+	<h4>Book Information</h4>
+	<hr />
+	<form asp-action="AddBook" method="post">
+		<div class="row">
+			<input type="hidden" asp-for="BookId" />
+
+			<div class="col-md-3">
+				<label asp-for="BookName"></label>
+				<input asp-for="BookName" class="form-control" />
+			</div>
+
+			<div class="col-md-3">
+				<label asp-for="Subject"></label>
+				<input asp-for="Subject" class="form-control" />
+			</div>
+
+			<div class="col-md-3">
+				<label asp-for="WriterName"></label>
+				<input asp-for="WriterName" class="form-control" />
+			</div>
+
+			<div class="col-md-3">
+				<label asp-for="Class"></label>
+				<input asp-for="Class" class="form-control" />
+			</div>
+
+			<div class="col-md-3 mt-3">
+				<label asp-for="PublishingYear"></label>
+				<input asp-for="PublishingYear" class="form-control" />
+			</div>
+
+			<div class="col-md-3 mt-3">
+				<label asp-for="UploadDate"></label>
+				<input asp-for="UploadDate" type="date" class="form-control" />
+			</div>
+
+			<div class="col-md-3 mt-3">
+				<label asp-for="IdNo"></label>
+				<input asp-for="IdNo" class="form-control" />
+			</div>
+		</div>
+
+		<div class="mt-4">
+			<button type="submit" class="btn btn-warning">Save</button>
+			<a asp-action="BookList" class="btn btn-dark">Reset</a>
+		</div>
+
+	</form>
+</div>

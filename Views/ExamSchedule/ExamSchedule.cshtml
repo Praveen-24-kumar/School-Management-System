@@ -1,0 +1,113 @@
+﻿@model ExamSchedulePageViewModel
+@{
+    ViewData["Title"] = "Exam Schedule";
+}
+
+<div class="card" style="border-radius:12px; box-shadow:0 4px 12px rgba(0,0,0,0.1); padding:20px; margin-top:20px;">
+
+    <div class="row g-4">
+
+        <!-- Exam Form -->
+        <div class="col-md-4">
+            <div style="padding:15px; background-color:#f8f9fa; border-radius:10px;">
+                <h5 style="font-weight:600; margin-bottom:15px;">📋 Add / Edit Exam</h5>
+                <form asp-action="Save" method="post">
+
+                    <input type="hidden" asp-for="Exam.ExamId" />
+
+                    <div class="form-group" style="margin-bottom:1rem;">
+                        <label>Exam Name</label>
+                        <input asp-for="Exam.ExamName" class="form-control" placeholder="Enter exam name" />
+                    </div>
+
+                    <div class="form-group" style="margin-bottom:1rem;">
+                        <label>Subject Type</label>
+                        <input asp-for="Exam.SubjectType" class="form-control" placeholder="Enter subject type" />
+                    </div>
+
+                    <div class="form-group" style="margin-bottom:1rem;">
+                        <label>Select Class</label>
+                        <input asp-for="Exam.Class" class="form-control" placeholder="Enter class" />
+                    </div>
+
+                    <div class="form-group" style="margin-bottom:1rem;">
+                        <label>Select Section</label>
+                        <input asp-for="Exam.Section" class="form-control" placeholder="Enter section" />
+                    </div>
+
+                    <div class="form-group" style="margin-bottom:1rem;">
+                        <label>Start Time</label>
+                        <input asp-for="Exam.ExamTime" type="time" class="form-control" />
+                    </div>
+
+                    <div class="form-group" style="margin-bottom:1rem;">
+                        <label>End Time</label>
+                        <input asp-for="Exam.EndTime" type="time" class="form-control" />
+                    </div>
+
+                    <div class="form-group" style="margin-bottom:1rem;">
+                        <label>Select Date</label>
+                        <input asp-for="Exam.ExamDate" type="date" class="form-control" />
+                    </div>
+
+                    <button type="submit" class="btn btn-warning mt-2" style="width:100%;">Submit</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Exam List -->
+        <div class="col-md-8">
+            <h5 style="font-weight:600; margin-bottom:15px;">📅 All Exam Schedule</h5>
+
+            <!-- Search -->
+            <form asp-action="ExamSchedule" method="get" class="d-flex justify-content-end mb-3">
+                <input type="text"
+                       name="classSearch"
+                       class="form-control w-25"
+                       placeholder="Search by Class..."
+                       value="@Context.Request.Query["classSearch"]"
+                       style="border-radius:20px 0 0 20px;" />
+
+                <button type="submit" class="btn btn-primary me-2" style="border-radius:0 20px 20px 0;">Search</button>
+
+                <a asp-action="ExamSchedule" class="btn btn-secondary me-2">📚 All</a>
+            </form>
+
+
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped align-middle">
+                    <thead>
+                        <tr>
+                            <th style="background-color:#0d6efd; color:#fff; text-align:center;">Exam Name</th>
+                            <th style="background-color:#0d6efd; color:#fff; text-align:center;">Subject</th>
+                            <th style="background-color:#0d6efd; color:#fff; text-align:center;">Class</th>
+                            <th style="background-color:#0d6efd; color:#fff; text-align:center;">Section</th>
+                            <th style="background-color:#0d6efd; color:#fff; text-align:center;">Time</th>
+                            <th style="background-color:#0d6efd; color:#fff; text-align:center;">Date</th>
+                            <th style="background-color:#0d6efd; color:#fff; text-align:center;">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.ExamList)
+                        {
+                            <tr style="text-align:center; vertical-align:middle;">
+                                <td>@item.ExamName</td>
+                                <td>@item.SubjectType</td>
+                                <td>@item.Class</td>
+                                <td>@item.Section</td>
+                                <td>@item.ExamTime.ToString(@"hh\:mm") - @item.EndTime.ToString(@"hh\:mm")</td>
+                                <td>@item.ExamDate</td>
+                                <td>
+                                    <a asp-action="ExamSchedule" asp-route-id="@item.ExamId" class="btn btn-sm btn-success me-1" style="padding:0.25rem 0.6rem; font-size:0.85rem;">✏️ Edit</a>
+                                    <a asp-controller="ExamSchedule" asp-action="Delete" asp-route-id="@item.ExamId"
+                                       onclick="return confirm('Are you sure to delete?')" class="btn btn-sm btn-danger" style="padding:0.25rem 0.6rem; font-size:0.85rem;">🗑️ Delete</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+</div>

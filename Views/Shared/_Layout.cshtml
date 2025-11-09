@@ -1,0 +1,219 @@
+﻿@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewData["Title"] - School Management</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+	<link href="~/css/site.css" rel="stylesheet" />
+	<script src="~/js/site.js"></script>
+	<script src="~/js/site.js"></script>
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <aside id="sidebar" class="bg-dark text-white pb-2" style="width:250px; transition: width 0.3s; position:fixed; height:100vh; overflow-x:hidden;">
+        <div class="d-flex align-items-center justify-content-between fw-bold fs-5 border-bottom border-secondary p-2 mb-3 bg-warning">
+            <span id="npsText" class="text-center flex-grow-1" style="transition: opacity 0.3s;">NPS</span>
+            <button id="sidebarToggle" class="btn btn-dark btn-sm ms-2"><i class="fa fa-bars"></i></button>
+        </div>
+
+        <nav class="nav flex-column">
+            <a class="nav-link text-white d-flex align-items-center" asp-controller="Dashboard" asp-action="Admin">
+                <i class="fa fa-dashboard me-2"></i>
+                <span class="link-text">Dashboard</span>
+            </a>
+            <a class="nav-link text-white d-flex justify-content-between align-items-center" data-bs-toggle="collapse" href="#userSubmenu" role="button">
+                <span> <i class="fa fa-user me-2"></i><span class="link-text">User</span></span>
+                <i class="fa fa-chevron-down"></i>
+            </a>
+
+            <div class="collapse ps-4" id="userSubmenu">
+                <a class="nav-link text-white" asp-controller="Users" asp-action="UsersList"><i class="fa fa-users me-2"></i>User List</a>
+                <a class="nav-link text-white" asp-controller="Master" asp-action="UsersRoleList"><i class="fa fa-user-tag me-2"></i>User Role</a>
+            </div>
+            <!-- Student Dropdown -->
+            <a class="nav-link text-white d-flex justify-content-between align-items-center"
+               data-bs-toggle="collapse" href="#studentMenu" role="button">
+                <span><i class="fa fa-user-graduate me-2"></i> <span class="link-text">Student</span></span>
+                <i class="fa fa-chevron-down"></i>
+            </a>
+            <div class="collapse ps-3" id="studentMenu">
+                <a class="nav-link text-warning d-flex align-items-center" asp-controller="Student" asp-action="StudentList">
+                    <i class="fa fa-list me-2"></i><span class="link-text">All Student</span>
+                </a>
+                <a class="nav-link text-warning d-flex align-items-center" asp-controller="Student" asp-action="Add" asp-route-id="0">
+                    <i class="fa fa-file-alt me-2"></i><span class="link-text">Admission Form</span>
+                </a>
+                @* <a class="nav-link text-warning d-flex align-items-center" asp-controller="Parents" asp-action="Index">
+                    <i class="fa fa-arrow-up me-2"></i><span class="link-text">Student Promotion</span>
+                </a> *@
+            </div>
+
+            <!-- Teacher Dropdown -->
+            <a class="nav-link text-white d-flex justify-content-between align-items-center"
+               data-bs-toggle="collapse" href="#teacherMenu" role="button">
+                <span><i class="fa fa-chalkboard-teacher me-2"></i> <span class="link-text">Teachers</span></span>
+                <i class="fa fa-chevron-down"></i>
+            </a>
+            <div class="collapse ps-3" id="teacherMenu">
+                <a class="nav-link text-warning d-flex align-items-center" asp-controller="Teacher" asp-action="TeacherList">
+                    <i class="fa fa-list me-2"></i><span class="link-text">All Teacher</span>
+                </a>
+                <a class="nav-link text-warning d-flex align-items-center" asp-controller="Teacher" asp-action="AddTeacher">
+                    <i class="fa fa-plus me-2"></i><span class="link-text">Add Teacher</span>
+                </a>
+            </div>
+
+            <!-- Library Dropdown -->
+            <a class="nav-link text-white d-flex justify-content-between align-items-center"
+               data-bs-toggle="collapse" href="#libraryMenu" role="button">
+                <span><i class="fa fa-book me-2"></i> <span class="link-text">Library</span></span>
+                <i class="fa fa-chevron-down"></i>
+            </a>
+            <div class="collapse ps-3" id="libraryMenu">
+                <a class="nav-link text-warning d-flex align-items-center" asp-controller="Book" asp-action="BookList">
+                    <i class="fa fa-list me-2"></i><span class="link-text">All Book</span>
+                </a>
+                <a class="nav-link text-warning d-flex align-items-center" asp-controller="Book" asp-action="AddBook">
+                    <i class="fa fa-plus me-2"></i><span class="link-text">Add Book</span>
+                </a>
+            </div>
+
+            <!-- Account Dropdown -->
+            <a class="nav-link text-white d-flex justify-content-between align-items-center"
+               data-bs-toggle="collapse" href="#accountMenu" role="button">
+                <span><i class="fa fa-user-circle me-2"></i> <span class="link-text">Account</span></span>
+                <i class="fa fa-chevron-down"></i>
+            </a>
+            <div class="collapse ps-3" id="accountMenu">
+                <a class="nav-link text-warning d-flex align-items-center" asp-controller="StudentFee" asp-action="StudentFeeList">
+                    <i class="fa fa-money-bill me-2"></i><span class="link-text">Fees Collection</span>
+                </a>
+                <a class="nav-link text-warning d-flex align-items-center" asp-controller="StudentFee" asp-action="AddPayment">
+                    <i class="fa fa-plus me-2"></i><span class="link-text">Create Student Payment</span>
+                </a>
+                <a class="nav-link text-warning d-flex align-items-center" asp-controller="Expense" asp-action="ExpenseList">
+                    <i class="fa fa-list me-2"></i><span class="link-text">All Expenses</span>
+                </a>
+                <a class="nav-link text-warning d-flex align-items-center" asp-controller="Expense" asp-action="AddExpense">
+                    <i class="fa fa-plus me-2"></i><span class="link-text">Add Expenses</span>
+                </a>
+            </div>
+
+            <!-- Static Links -->
+            <a class="nav-link text-white d-flex align-items-center" asp-controller="Parent" asp-action="ParentDetails">
+                <i class="fa fa-clipboard me-2"></i> <span class="link-text">Parent Details</span>
+            </a>
+            <a class="nav-link text-white d-flex align-items-center" asp-controller="ClassRoutine" asp-action="ClassRoutine">
+                <i class="fa fa-clipboard me-2"></i> <span class="link-text">Class Routine</span>
+            </a>
+            <a class="nav-link text-white d-flex align-items-center" asp-controller="ClassSubject" asp-action="Index">
+                <i class="fa fa-book-open me-2"></i> <span class="link-text">Subject</span>
+            </a>
+            <a class="nav-link text-white d-flex align-items-center" asp-controller="Attendance" asp-action="Attendance">
+                <i class="fa fa-user-check me-2"></i> <span class="link-text">Attendance</span>
+            </a>
+            <a class="nav-link text-white d-flex align-items-center" asp-controller="ExamSchedule" asp-action="ExamSchedule">
+                <i class="fa fa-calendar-alt me-2"></i> <span class="link-text">Exam</span>
+            </a>
+            <a class="nav-link text-white d-flex align-items-center" asp-controller="Transport" asp-action="VechileTransport">
+                <i class="fa fa-bus me-2"></i> <span class="link-text">Transport</span>
+            </a>
+            <a class="nav-link text-white d-flex align-items-center" asp-controller="Notice" asp-action="Notice">
+                <i class="fa fa-bullhorn me-2"></i> <span class="link-text">Notice</span>
+            </a>
+
+            <a class="nav-link text-danger d-flex align-items-center" asp-controller="Login" asp-action="Logout">
+                <i class="fa fa-sign-out-alt me-2"></i><span class="link-text">Log Out</span>
+            </a>
+        </nav>
+    </aside>
+
+    <!-- Top Navbar -->
+ 
+    <header id="topNavbar" class="bg-secondary shadow-sm d-flex align-items-center py-1" style="margin-left:250px; transition: margin-left 0.3s; justify-content: space-between;">
+        <h1 class="h5 fw-bold m-0 ps-5">NATIONAL PUBLIC SCHOOL</h1>
+
+        <!-- Search Bar -->
+        <form class="mx-auto" style="max-width:600px; width:100%;">
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="Search..." aria-label="Search" style="height:35px;">
+                <button class="btn btn-outline-primary" type="submit" style="height:35px;">
+                    <i class="fa fa-search"></i>
+                </button>
+            </div>
+        </form>
+
+        <div class="d-flex align-items-center gap-3 px-5">
+            <i class="fa fa-bell fs-5"></i>
+            <i class="fa fa-envelope fs-5"></i>
+            <div class="dropdown">
+                <span class="d-flex align-items-center gap-2 dropdown-toggle"
+                      id="profileMenu" data-bs-toggle="dropdown" aria-expanded="false"
+                      style="cursor:pointer; color:black; background:pink; padding:8px 12px; border-radius:10px;">
+                    <i class="fa fa-user-circle fs-5"></i> 
+                    @HttpContextAccessor.HttpContext.Session.GetString("Name") 
+                </span>
+
+
+                <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="profileMenu">
+                    <li><a class="dropdown-item" asp-controller="Profile" asp-action="MyProfile">👤 My Profile</a></li>
+                    <li><a class="dropdown-item" href="#">⚙️ Account Settings</a></li>
+                    <li><a class="dropdown-item" href="#">🔒 Change Password</a></li>
+                    <li><hr class="dropdown-divider"></li>
+                    <li><a class="dropdown-item text-danger" asp-controller="Login" asp-action="Logout">🚪 Logout</a></li>
+                </ul>
+            </div>
+
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main id="mainContent" style="margin-left:250px; height: calc(100vh - 60px); overflow-y: auto; transition: margin-left 0.3s;">
+        @RenderBody()
+
+    </main>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const toggleBtn = document.getElementById('sidebarToggle');
+        const sidebar = document.getElementById('sidebar');
+        const topNavbar = document.getElementById('topNavbar');
+        const mainContent = document.getElementById('mainContent');
+        const npsText = document.getElementById('npsText');
+
+        toggleBtn.addEventListener('click', () => {
+            if (sidebar.style.width === '250px' || sidebar.style.width === '') {
+                sidebar.style.width = '60px';
+                topNavbar.style.marginLeft = '60px';
+                mainContent.style.marginLeft = '60px';
+                npsText.style.display = 'none'; // NPS hide
+            } else {
+                sidebar.style.width = '250px';
+                topNavbar.style.marginLeft = '250px';
+                mainContent.style.marginLeft = '250px';
+                npsText.style.display = 'inline'; // NPS show
+            }
+
+            // Sidebar link texts hide/show
+            const texts = sidebar.querySelectorAll('.link-text');
+            texts.forEach(span => {
+                span.style.display = (sidebar.style.width === '60px') ? 'none' : 'inline';
+            });
+        });
+    </script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validation-unobtrusive/3.2.12/jquery.validate.unobtrusive.min.js"></script>
+   
+
+
+     @RenderSection("Scripts", required: false)
+</body>
+</html>

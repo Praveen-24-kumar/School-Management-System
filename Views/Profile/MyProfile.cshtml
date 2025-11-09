@@ -1,0 +1,30 @@
+﻿@model SchoolManagement.Models.UsersModel
+
+<div class="container mt-5" style="max-width:600px; background:#f8f9fa; padding:20px; border-radius:12px; box-shadow:0 4px 10px rgba(0,0,0,0.1);">
+    <h4 class="mb-4 text-center">👤 My Profile</h4>
+
+    <div class="mb-3">
+        <label class="fw-semibold">Name:</label>
+        <span class="ms-2">@Model.Name</span>
+    </div>
+
+    <div class="mb-3">
+        <label class="fw-semibold">Username:</label>
+        <span class="ms-2">@Model.Username</span>
+    </div>
+
+    <div class="mb-3">
+        <label class="fw-semibold">Role:</label>
+        <span class="ms-2">@Model.Role</span>
+    </div>
+
+  @*   <div class="mb-3">
+        <label class="fw-semibold">Designation:</label>
+        <span class="ms-2">@Model.Description</span>
+    </div> *@
+
+    <div class="mb-3">
+        <label class="fw-semibold">Status:</label>
+        <span class="ms-2">@((Model.IsActive) ? "Active" : "Inactive")</span>
+    </div>
+</div>

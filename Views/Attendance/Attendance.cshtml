@@ -1,0 +1,146 @@
+﻿@model SchoolManagement.Models.AttendanceViewModel
+
+<div class="container mt-4">
+    <h3>Checkout Student Attendance</h3>
+    <div class="row g-3">
+        <form asp-action="Attendance" asp-controller="Attendance" method="post">
+            <div class="row g-3">
+                <div class="col-md-3">
+                    <label>Select Class</label>
+                    <select asp-for="SelectedClass" asp-items="@(new SelectList(Model.Classes))" class="form-control"></select>
+                </div>
+                <div class="col-md-3">
+                    <label>Select Section</label>
+                    <select asp-for="SelectedSection" asp-items="@(new SelectList(Model.Sections))" class="form-control"></select>
+                </div>
+                <div class="col-md-3">
+                    <label>Select Month</label>
+                    <select asp-for="SelectedMonth" asp-items="@(new SelectList(Model.Months))" class="form-control"></select>
+                </div>
+                <div class="col-md-3">
+                    <label>Session Year</label>
+                    <select asp-for="SelectedYear" asp-items="@(new SelectList(Model.Years))" class="form-control"></select>
+                </div>
+                <div class="col-md-12 mt-3">
+                    <button type="submit" class="btn btn-warning">Search</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    @if (Model.StudentAttendances.Any())
+    {
+        <div class="mt-4">
+            <h4>Attendance Sheet Of Class @Model.SelectedClass : Section @Model.SelectedSection, @Model.SelectedMonth @Model.SelectedYear</h4>
+            <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Students</th>
+                        @for (int d = 1; d <= DateTime.DaysInMonth(Model.SelectedYear, DateTime.ParseExact(Model.SelectedMonth, "MMMM", null).Month); d++)
+                        {
+                            <th>@d</th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var student in Model.StudentAttendances)
+                    {
+                        <tr>
+                            <td>@student.StudentName</td>
+                            @for (int d = 1; d <= DateTime.DaysInMonth(Model.SelectedYear, DateTime.ParseExact(Model.SelectedMonth, "MMMM", null).Month); d++)
+                            {
+                                string value = student.Days.ContainsKey(d) ? student.Days[d] : " ";
+                                <td class="attendance-cell"
+                                    data-studentid="@student.StudentId"
+                                    data-day="@d">
+                                    @value
+                                </td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            <button id="saveAttendance" class="btn btn-success mt-3">Save Attendance</button>
+
+            <script>
+                $(document).ready(function(){
+                    $('#btn_search').click();
+                    $('#btn_search').on('click', function(){
+                        $.ajax({
+                            url:'/Attendance/Attendance',
+                            type:'POST',
+                            dataType:'JSON',
+                            data:{},
+                            success:function(res){
+                                console.log(res);
+                            }
+                        })
+                    });
+                });
+
+                // Single click -> Present (✔)
+                // Double click -> Absent (✘)
+                                document.querySelectorAll("td.attendance-cell").forEach(cell => {
+                    cell.addEventListener("click", function (e) {
+                        // Single Click → Present ✔
+                        this.innerText = "✔";
+                        this.dataset.status = "present";
+                        this.style.color="green";
+                    });
+
+                    cell.addEventListener("dblclick", function (e) {
+                        // Double Click → Absent ✘
+                        this.innerText = "✘";
+                        this.dataset.status = "absent";
+                        this.style.color="red";
+                    });
+
+                    cell.addEventListener("mousedown", function (e) {
+                        if (e.detail === 3) {
+                            // Triple Click → Remove
+                            this.innerText = "-";
+                            this.dataset.status = "none";
+                        }
+                    });
+                });
+               
+
+                // Save button -> send bulk data
+                document.getElementById("saveAttendance").addEventListener("click", function () {
+                    let entries = [];
+                    document.querySelectorAll(".attendance-cell").forEach(cell => {
+                        if (cell.dataset.status) {
+                            entries.push({
+                                studentId: cell.dataset.studentid,
+                                day: cell.dataset.day,
+                                isPresent: (cell.dataset.status === "present")
+                            });
+                        }
+                    });
+
+                    let data = {
+                        year: @Model.SelectedYear,
+                        month: @DateTime.ParseExact(Model.SelectedMonth, "MMMM", null).Month,
+                        entries: entries
+                    };
+
+                    fetch('/Attendance/SaveBulkAttendance', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(data)
+                    })
+                    .then(res => res.json())
+                    .then(result => {
+                        if (result.success) {
+                            alert("Attendance saved successfully!");
+                        } else {
+                            alert("Error: " + result.message);
+                        }
+                    });
+                });
+            </script>
+
+        </div>
+    }
+</div>

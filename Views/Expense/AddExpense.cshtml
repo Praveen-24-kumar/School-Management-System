@@ -1,0 +1,71 @@
+﻿@model SchoolManagement.Models.ExpenseModel
+
+<div class="container-fluid p-4">
+	<div class="card p-2">
+		<h3 class="border-bottom border-2 ">Add New Expenses</h3>
+		<div class="card-body p-2">
+			<form asp-action="AddExpense" method="post">
+				<div class="row">
+					<div class="col-md-3">
+						<label asp-for="Name"></label>
+						<input asp-for="Name" class="form-control" />
+					</div>
+					<div class="col-md-3">
+						<label asp-for="ID"></label>
+						<input asp-for="ID" class="form-control" readonly />
+					</div>
+					<div class="col-md-3">
+						<label asp-for="ExpenseType"></label>
+						<select asp-for="ExpenseType" class="form-control">
+							<option value="">--Select Type--</option>
+							<option>Office Supplies</option>
+							<option>Maintenance</option>
+							<option>Transport</option>
+							<option>Miscellaneous</option>
+						</select>
+					</div>
+					<div class="col-md-3">
+						<label asp-for="Amount"></label>
+						<input asp-for="Amount" class="form-control" />
+					</div>
+				</div>
+
+				<br />
+				<div class="row">
+					<div class="col-md-3">
+						<label asp-for="Phone"></label>
+						<input asp-for="Phone" class="form-control" />
+					</div>
+					<div class="col-md-3">
+						<label asp-for="Email"></label>
+						<input asp-for="Email" class="form-control" />
+					</div>
+					<div class="col-md-3">
+						<label asp-for="Status"></label>
+						<select asp-for="Status" class="form-control">
+							<option value="">--Select Status--</option>
+							<option>Pending</option>
+							<option>Approved</option>
+							<option>Rejected</option>
+						</select>
+					</div>
+					<div class="col-md-3">
+						<label asp-for="Date"></label>
+						<input asp-for="Date" type="date" class="form-control" />
+					</div>
+				</div>
+
+				<br />
+				<button type="submit" class="btn btn-warning">Save</button>
+				<button type="reset" class="btn btn-dark">Reset</button>
+			</form>
+
+			@if (TempData["Success"] != null)
+			{
+				<div class="alert alert-success mt-3">@TempData["Success"]</div>
+			}
+
+		</div>
+	</div>
+
+</div>

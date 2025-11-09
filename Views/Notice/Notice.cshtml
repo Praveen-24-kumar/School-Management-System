@@ -1,0 +1,93 @@
+﻿@model SchoolManagement.Models.NoticeBoardViewModel
+
+@{
+    ViewData["Title"] = "Notice Board";
+}
+
+<div class="container-fluid py-4">
+    <div class="row mb-3">
+        <div class="col-12">
+            <nav class="small text-secondary">
+                <a href="/" class="text-decoration-none">Home</a> &gt;
+                <span class="text-dark">Notice Board</span>
+            </nav>
+        </div>
+    </div>
+
+    <div class="row g-3">
+        <!-- Left: Create Notice -->
+        <div class="col-12 col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title mb-4">Create A Notice</h5>
+                    <form asp-action="save" method="post">
+                        <div class="mb-3">
+                            <label class="form-label">Title</label>
+                            <input asp-for="NoticeForm.Title" class="form-control" />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Details</label>
+                            <textarea asp-for="NoticeForm.Details" class="form-control" rows="4"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Posted By</label>
+                            <input asp-for="NoticeForm.PostedBy" class="form-control" />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Date</label>
+                            <input asp-for="NoticeForm.NoticeDate" type="date" class="form-control" />
+                        </div>
+                        <button type="submit" class="btn btn-warning text-white">Submit</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right: Notice Board -->
+        <div class="col-12 col-md-8">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h5 class="card-title mb-0">Notice Board</h5>
+                        <form asp-action="Save" method="get" class="d-flex gap-2">
+                            <a asp-action="ClassRoutine" class="btn btn-secondary w-50 me-2">📚 All</a>
+                            <input type="date" name="dateSearch" class="form-control" placeholder="Search By Date ..." value="@Context.Request.Query["dateSearch"]"/>
+                            <button type="submit" class="btn btn-primary">Search</button>
+                        </form>
+                    </div>
+                    <hr />
+                    @foreach (var notice in Model.NoticeList)
+                    {
+                        <div class="mb-3 pb-3 border-bottom">
+                            <!-- 🕒 Actual DateTime (e.g., 12 Sep 2025, 10:30 AM) -->
+                            <p class="small text-secondary mb-1"> 📅 Posted On: @notice.NoticeDate.ToString("dd MMM yyyy, hh:mm tt")</p>
+
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h6 class="mb-1 text-primary fw-bold">
+                                        @notice.PostedBy
+                                    </h6>
+                                    <p class="mb-0">@notice.Details</p>
+                                </div>
+
+                                <!-- 🛠 Action Buttons -->
+                                <div class="ms-3 text-end">
+                                    @* <form asp-action="EditNotice" method="get" asp-route-id="@notice.NoticeId" class="d-inline">
+                                        <button type="submit" class="btn btn-sm btn-warning">Edit</button>
+                                    </form> *@
+
+                                    <form asp-action="Delete" method="post" asp-route-id="@notice.NoticeId" class="d-inline"
+                                          onsubmit="return confirm('Are you sure you want to delete this notice?');">
+                                        <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+

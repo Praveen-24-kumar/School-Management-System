@@ -1,0 +1,49 @@
+﻿@model MasterModel
+
+<div class="card shadow-sm mt-4">
+	<div class="card-body">
+		<h3 class="mb-4">Add User Role</h3>
+
+		<form asp-action="AddUsersRole" method="post">
+			<div class="row g-3">
+
+				<input type="hidden" asp-for="Id" />
+
+				<div class="col-md-6">
+					<label asp-for="Name" class="form-label"> Name</label>
+					<input asp-for="Name" class="form-control" placeholder="Enter Full Name" />
+					<span asp-validation-for="Role" class="text-danger small"></span>
+				</div>
+				<!-- Role Name -->
+				<div class="col-md-6">
+					<label asp-for="Role" class="form-label">Role Name</label>
+					<input asp-for="Role" class="form-control" placeholder="Enter Role Name" />
+
+					<span asp-validation-for="Role" class="text-danger small"></span>
+				</div>
+
+
+				<!-- Designation -->
+				<div class="col-md-6">
+					<label asp-for="Designation" class="form-label">Description</label>
+					<input asp-for="Designation" class="form-control" placeholder="Enter Description" />
+					<span asp-validation-for="Designation" class="text-danger small"></span>
+				</div>
+
+				<!-- IsActive -->
+				@* <div class="col-md-6 mt-3">
+					<div class="form-check">
+						<input asp-for="IsActive" class="form-check-input" type="checkbox" />
+						<label asp-for="IsActive" class="form-check-label">Is Active?</label>
+					</div>
+				</div> *@
+
+				<!-- Submit Button -->
+				<div class="col-12 mt-4">
+					<button type="submit" class="btn btn-primary px-4">Save Role</button>
+					@* <a asp-action="UserRoleList" asp-controller="Users" class="btn btn-secondary px-4 ms-2">Back to List</a> *@
+				</div>
+			</div>
+		</form>
+	</div>
+</div>

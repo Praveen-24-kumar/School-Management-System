@@ -1,0 +1,51 @@
+﻿@model List<ExpenseModel>
+<div class="container-fluid p-4">
+	<h2>All Expenses List</h2>
+	@* <a class="btn btn-primary mb-3" href="/Expense/AddOrEdit">Add Expense</a> *@
+
+	<table class="table table-bordered table-striped">
+		<thead>
+			<tr>
+				<th>ID</th>
+				<th>Expense Type</th>
+				<th>Name</th>
+				<th>Amount</th>
+				<th>Status</th>
+				<th>Phone</th>
+				<th>Email</th>
+				<th>Date</th>
+				<th>Action</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var item in Model)
+			{
+				<tr>
+					<td>@item.ID</td>
+					<td>@item.ExpenseType</td>
+					<td>@item.Name</td>
+					<td>@item.Amount.ToString("C")</td>
+					<td>
+						<span class="badge @(item.Status == "Paid" ? "bg-success" : "bg-danger")">
+							@item.Status
+						</span>
+					</td>
+					<td>@item.Phone</td>
+					<td>@item.Email</td>
+					<td>@item.Date.ToString("MM/dd/yyyy")</td>
+					<td>
+						@* <a asp-action="Details" asp-route-id="@item.ID" class="btn btn-info btn-sm">
+                        <i class="fa fa-eye"></i>
+                    </a> *@
+						<a asp-action="AddExpense" asp-route-id="@item.ID" class="btn btn-warning btn-sm">
+							<i class="fa fa-edit"></i>
+						</a>
+						<a asp-action="Delete" asp-route-id="@item.ID" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure?')">
+							<i class="fa fa-trash"></i>
+						</a>
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+</div>

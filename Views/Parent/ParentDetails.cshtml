@@ -1,0 +1,40 @@
+﻿@model List<ParentModel>
+<div class="container-fluid p-4">
+
+	<h3>All Parents List</h3>
+	<table class="table table-striped">
+		<thead>
+			<tr>
+				<th>Photo</th>
+				<th>Name</th>
+				<th>Gender</th>
+				<th>Occupation</th>
+				<th>Address</th>
+				<th>Mobile</th>
+				<th>Email</th>
+				<th>Actions</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var p in Model)
+			{
+				<tr>
+					<td>
+						<img src="@p.Photo" width="40" height="40" style="border-radius:50%;" />
+					</td>
+					<td>@p.Name</td>
+					<td>@p.Gender</td>
+					<td>@p.Occupation</td>
+					<td>@p.Address</td>
+					<td>@p.Phone</td>
+					<td>@p.Email</td>
+					<td>
+						<button class="btn btn-sm btn-info">👁</button>
+						<button class="btn btn-sm btn-success">✏️</button>
+						<button class="btn btn-sm btn-danger">🗑</button>
+					</td>
+				</tr>
+			}
+		</tbody>
+	</table>
+</div>
