@@ -1,0 +1,11 @@
+.body{
+    margin-top:0;
+    margin-bottom:0;
+}
+.container {
+    background-color: aliceblue;
+    /*width: 100vw;*/ /* Full width of viewport */
+    /*height: 100vh;*/ /* Full height of viewport */
+    /*margin: 0;
+    padding: 0;*/
+}
